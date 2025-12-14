@@ -40,6 +40,7 @@ services:
     env_file:
       - .env
     depends_on:
+      - db
       - redis
     command: python -u -m app.ssh.run
     environment:
@@ -77,9 +78,7 @@ services:
     restart: always
     ports:
       - "6379:6379"
-    command: ["redis-server", "--save", "60", "1", "--appendonly", "yes"]
-    volumes:
-      - redis_data:/data
+    command: ["redis-server"]
 
   # for database management GUI
   pgadmin:
@@ -97,5 +96,3 @@ services:
 volumes:
   postgres_data:
     name: honeypot_postgres_data
-  redis_data:
-    name: honeypot_redis_data

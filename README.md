@@ -1,5 +1,7 @@
 # honeypot
 
+note: this project is still in development, you may find bugs
+
 ## get started:
 1. start the backend:
    ```bash

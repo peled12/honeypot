@@ -12,7 +12,6 @@ from .sockets.sockets import init_sockets
 
 # TODO: test and fix the stor command in ftp
 # TODO: fix socket in frontend
-# TODO: put in a github repo, add a readme that explains how to init docker and test http, ssh, ftp
 # TODO: deploy my server
 # TODO: ensure implementation of rate limiting
 

@@ -83,15 +83,18 @@ class HoneypotSSHSession(asyncssh.SSHServerSession):
         print(f"data received: {data!r}")
         # data: incoming data from client
 
+        asyncio.create_task(self._handle_data(data)) # process data asynchronously
+
+    async def _handle_data(self, data):
         self._input += data # accumulate input into buffer
 
         # process each complete line
         while "\n" in self._input:
             line, _, self._input = self._input.partition("\n")
-            
+                
             cmd = line.strip() # get the command
 
-            event_obj = EventCreate.from_ssh(
+            event_obj = await EventCreate.from_ssh(
                 src_ip=self.ip,
                 src_port=self.port,
                 dest_port=self.server_port,
@@ -103,13 +106,13 @@ class HoneypotSSHSession(asyncssh.SSHServerSession):
             # save to db and publish to redis
             loop = asyncio.get_running_loop() # get current event loop
             loop.run_in_executor(None, save_event_sync, event_obj) # run the blocking db operation in the background to not block the event loop
-            
+
             if cmd in ("exit", "logout"):
                 # simulate logout and exit session
                 self._chan.write("logout\n")
                 self._chan.exit(0)
 
-             # handle uname command
+            # handle uname command
             elif cmd.startswith("uname"):
                 # decide what to output (like uname -a)
                 uname_output = self.profile["uname"].format(host=self.host)
@@ -125,3 +128,4 @@ class HoneypotSSHSession(asyncssh.SSHServerSession):
             # other commands
             else:
                 self._chan.write(f"bash: {cmd}: command not found\n$ ") # fake command not found
+        

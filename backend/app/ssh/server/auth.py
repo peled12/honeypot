@@ -7,7 +7,7 @@ from app.ssh.db_utild import save_event_sync
 from app.ssh.server.registery import set_session_info
 from app.utils.banner_rotation import get_ssh_profile
 
-def password_auth_handler(conn, username: str, password: str) -> bool:
+async def password_auth_handler(conn, username: str, password: str) -> bool:
     # client information
     peer = conn.get_extra_info("peername")
     client_ip = peer[0] if peer else UNKNOWN
@@ -34,7 +34,7 @@ def password_auth_handler(conn, username: str, password: str) -> bool:
     session_id = str(uuid.uuid4()) # unique session id that belongs for this connection
     full_path = f"ssh://{server_ip}:{server_port}/session/{session_id}"
 
-    event_obj = EventCreate.from_ssh(
+    event_obj = await EventCreate.from_ssh(
         src_ip=client_ip,
         src_port=client_port,
         dest_port=server_port,

@@ -1,0 +1,16 @@
+h1 {
+  text-align: center;
+}
+
+.chart-component {
+  border-collapse: collapse;
+  width: min-content;
+  margin: 0 auto;
+}
+
+.chart-component th {
+  border: "1px solid #ddd";
+  padding: "8px";
+  text-align: "left";
+  background: "#f6f6f6";
+}

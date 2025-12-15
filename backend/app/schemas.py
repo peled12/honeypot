@@ -81,8 +81,7 @@ class EventCreate(BaseModel):
         raw_payload = command or None
         service = SERVICES.SSH
 
-        ua = None # SSH has no user-agent concept
-        fingerprint_data = f"{src_ip}{ua}{command or ''}{full_path or ''}"
+        fingerprint_data = f"{src_ip}{command or ''}{full_path or ''}"
         fingerprint = hashlib.sha256(fingerprint_data.encode()).hexdigest()
         method = "SSH_COMMAND"
 

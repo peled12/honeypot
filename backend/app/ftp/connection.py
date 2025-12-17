@@ -46,13 +46,21 @@ class FTPConnection:
         if not self.data_sock:
             return b""
 
-        conn, _ = await asyncio.get_event_loop().sock_accept(self.data_sock)
+        reader, writer = await self.data_conn  # set by pasv command
         chunks = []
         while True:
-            data = await asyncio.get_event_loop().sock_recv(conn, 4096)
+            data = await reader.read(4096)
             if not data:
                 break
             chunks.append(data)
 
-        conn.close()
+        writer.close()
+        await writer.wait_closed()
+
+        # close the server socket
+        self.data_sock.close()
+        self.data_sock = None
+        self.data_conn = None
+
         return b"".join(chunks)
+

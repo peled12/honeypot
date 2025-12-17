@@ -10,6 +10,11 @@ class StorCommand(BaseCommand):
         if not conn.logged_in:
             await conn.send("530 Not logged in")
             return
+        
+        if not conn.data_sock:
+            await conn.send("425 Can't open data connection")
+            return
+
         await conn.send("150 Opening data connection for file upload")
 
         file_bytes = await conn.read_data_socket() # read data

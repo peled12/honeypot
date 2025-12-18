@@ -4,3 +4,4 @@ from app.ftp.connection import FTPConnection
 class OptsCommand(BaseCommand):
     async def handle(self, conn: FTPConnection, arg: str):
         print(f"Connection from {conn.remote_ip}")
+        await conn.send("200 OPTS accepted")

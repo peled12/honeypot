@@ -1,6 +1,4 @@
 import asyncio
-import socket
-import threading
 
 from app.ftp.connection import FTPConnection
 from app.ftp.dispatcher import dispatch_command
@@ -28,9 +26,6 @@ class FTPServer:
         conn = FTPConnection(reader, writer)
 
         await conn.send(f"220 {conn.banner}")
-
-        # save the connection
-        await dispatch_command("OPTS", "", conn)
 
         # listen for commands
         try:

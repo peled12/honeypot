@@ -52,7 +52,8 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "21:2121"
+      - "21:2121" # FTP control port
+      - "50000-50010:50000-50010" # FTP passive data ports
     env_file:
       - .env
     depends_on:

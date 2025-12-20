@@ -7,15 +7,19 @@ class FTPConnection:
         self.reader = reader
         self.writer = writer
 
-        sock = writer.get_extra_info("socket")
+        sock = writer.get_extra_info("sockname")
         addr = writer.get_extra_info("peername")
         self.remote_ip = addr[0]
         self.remote_port = addr[1]
-        self.local_port = sock.getsockname()[1]
+        self.local_port = sock[1]
 
         self.username = None
         self.logged_in = False
-        self.data_sock = None  # for uploads
+
+        # for uploads
+        self.data_sock = None
+        self.data_conn = None
+
         self.session_id = str(uuid.uuid4())
         self.full_path = f"ftp://{self.remote_ip}:{self.local_port}/session/{self.session_id}"
         self.banner = get_ftp_banner(self.remote_ip)

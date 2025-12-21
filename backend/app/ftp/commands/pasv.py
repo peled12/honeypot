@@ -12,13 +12,15 @@ PUBLIC_FTP_IP = os.getenv("PUBLIC_FTP_IP", "127.0.0.1")
 
 class PasvCommand(BaseCommand):
     async def handle(self, conn: FTPConnection, arg):
+        conn.data_conn = asyncio.get_event_loop().create_future() # hold data connection as a future
+
         # pick a free port from the range
         for _ in range(len(PASV_PORTS)):
             port = random.choice(PASV_PORTS)
             
             try:
                 server = await asyncio.start_server(
-                    lambda r, w: setattr(conn, "data_conn", (r, w)),
+                    lambda r, w: conn.data_conn.set_result((r, w)), # set data connection future when a client connects
                     host="0.0.0.0",
                     port=port,
                 )

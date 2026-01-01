@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 from app.utils.config import FRONTEND_ORIGINS, is_ip_allowed
 from .sockets.sockets import init_sockets
 
-# TODO: test and fix the stor command in ftp
 # TODO: fix socket in frontend
 # TODO: deploy my server
 # TODO: ensure implementation of rate limiting

@@ -11,7 +11,7 @@ services:
     depends_on:
       - db
       - redis
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
 
   honeypot_listener:
     container_name: honeypot_listener
@@ -27,7 +27,7 @@ services:
     depends_on:
       - db
       - redis
-    command: uvicorn app.main_honeypot:app --host 0.0.0.0 --port 8001 --reload
+    command: uvicorn app.main_honeypot:app --host 0.0.0.0 --port 8001
 
   honeypot_ssh:
     container_name: honeypot_ssh
@@ -35,7 +35,6 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "2222:2222"
       - "22:2222"
     env_file:
       - .env
@@ -44,7 +43,9 @@ services:
       - redis
     command: python -u -m app.ssh.run
     environment:
-      - SSH_HOST_KEY=/app/host_key
+      - SSH_HOST_KEY=/app/host_key_dir/host_key
+    volumes:
+      - ./ssh_host_keys:/app/host_key_dir
 
   honeypot_ftp:
     container_name: honeypot_ftp
@@ -61,7 +62,6 @@ services:
       - redis
     command: python -u -m app.ftp.run
 
-
   db:
     image: postgres:15
     container_name: honeypot_db
@@ -70,15 +70,11 @@ services:
       - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
 
   redis:
     image: redis:7
     container_name: honeypot_redis
     restart: always
-    ports:
-      - "6379:6379"
     command: ["redis-server"]
 
   # for database management GUI
@@ -90,7 +86,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "5050:80"
+      - "127.0.0.1:5050:80"
     depends_on:
       - db
 

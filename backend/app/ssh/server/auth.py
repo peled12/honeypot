@@ -31,7 +31,6 @@ async def password_auth_handler(conn, username: str, password: str) -> bool:
 
     # build event object
 
-    session_id = str(uuid.uuid4()) # unique session id that belongs for this connection
     full_path = f"ssh://{server_ip}:{server_port}/session/{session_id}"
 
     event_obj = await EventCreate.from_ssh(

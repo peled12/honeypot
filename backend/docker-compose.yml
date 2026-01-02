@@ -21,7 +21,7 @@ services:
     ports:
       # locally listen on these ports and forward to honeypot_listener container port 8001
       - "8080:8001"
-      - "80:8001"
+      - "8081:8001"
     env_file:
       - .env
     depends_on:
@@ -35,7 +35,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "22:2222"
+      - "2222:22"
     env_file:
       - .env
     depends_on:
@@ -53,7 +53,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "21:2121" # FTP control port
+      - "2121:21" # FTP control port
       - "50000-50010:50000-50010" # FTP passive data ports
     env_file:
       - .env

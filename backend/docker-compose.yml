@@ -35,7 +35,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "2222:22"
+      - "2222:2222"
     env_file:
       - .env
     depends_on:
@@ -44,8 +44,6 @@ services:
     command: python -u -m app.ssh.run
     environment:
       - SSH_HOST_KEY=/app/host_key_dir/host_key
-    volumes:
-      - ./ssh_host_keys:/app/host_key_dir
 
   honeypot_ftp:
     container_name: honeypot_ftp
